@@ -9,15 +9,7 @@ import {
 } from "react-native";
 import MovieDetails from "../components/MovieDetails";
 import GlobalStyle from "../styles/styles";
-interface Movie {
-  id: string;
-  title: string;
-  overview: string;
-  release_date: string;
-  poster_path: string;
-  thoughts: string;
-  // Add other fields as needed
-}
+import {Movie} from "../types"
 
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../App";
@@ -25,6 +17,14 @@ import searchMovies from "../../services/tmbd";
 import { useDispatch } from "react-redux";
 import { addMovie } from "../moviesSlice";
 import { AppDispatch } from "../store";
+interface SearchResultMovie {
+  id: string;
+  title: string;
+  overview: string;
+  release_date: string;
+  poster_path: string;
+  // Add other fields as needed
+}
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, "AddNewMovie">;
@@ -32,7 +32,7 @@ type Props = {
 
 const AddNewMovie: React.FC<Props> = ({ navigation }) => {
   const [query, setQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<Movie[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResultMovie[]>([]);
   const [movie, setMovie] = useState<Movie>();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -46,10 +46,15 @@ const AddNewMovie: React.FC<Props> = ({ navigation }) => {
     }
   };
 
-  const selectMovie = (movie: Movie) => {
-    setMovie(movie);
+  const selectMovie = (selectedMovie: SearchResultMovie) => {
+    setMovie({
+      ID: "", // Will be populated by Firebase
+      thoughts: "", // Default empty thoughts
+      movieData: selectedMovie,
+      // watched: false,
+    });    
     setSearchResults([]); // Clear movie suggestions after selecting a movie
-    setQuery(movie.title); // Update the query to the selected movie's title
+    setQuery(selectedMovie.title); // Update the query to the selected movie's title
   };
 
   const addMovieWithRedux = (myThoughts: any) => {
@@ -86,11 +91,12 @@ const AddNewMovie: React.FC<Props> = ({ navigation }) => {
             onSubmitEditing={handleSearch}
           />
           {/* <Button title="Search" onPress={handleSearch} /> */}
-          {searchResults.length != 0 && (
+          {searchResults.length != 0 &&  (
             <FlatList
               style={styles.suggestionBox}
               data={searchResults}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item) => 
+                item.id.toString()}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.suggestion}
@@ -103,8 +109,8 @@ const AddNewMovie: React.FC<Props> = ({ navigation }) => {
           )}
           {movie && (
             <MovieDetails
-              movie={movie}
-              onSave={addMovieWithRedux}
+            movie={movie} // Pass the selected movie directly
+            onSave={addMovieWithRedux}
               showDelete={false}
             />
           )}

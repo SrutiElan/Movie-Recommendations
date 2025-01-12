@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {Movie} from "../types";
 import {
   StyleSheet,
   Text,
@@ -12,13 +13,7 @@ import GlobalStyle from "../styles/styles";
 import { Ionicons, Entypo } from "@expo/vector-icons";
 
 interface MovieDetailsProps {
-  movie: {
-    title: string;
-    overview: string;
-    release_date: string;
-    poster_path: string;
-    thoughts: string;
-  };
+  movie:Movie;
   onSave: (thoughts: string) => void;
   showDelete: boolean;
   onDelete?: () => void;
@@ -44,10 +39,10 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
           }}
         >
           <Text style={GlobalStyle.labelText}>DATE RELEASED</Text>
-          <Text style={GlobalStyle.details}>{movie.release_date}</Text>
+          <Text style={GlobalStyle.details}>{movie.movieData.release_date}</Text>
           <Image
             source={{
-              uri: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+              uri: `https://image.tmdb.org/t/p/w500${movie.movieData.poster_path}`,
             }}
             style={{ width: `100%`, aspectRatio: "2/3", marginTop: 10 }}
           />
@@ -70,7 +65,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
               textAlignVertical: "top",
             }}
           >
-            {movie.overview}
+            {movie.movieData.overview}
           </Text>
         </View>
       </View>

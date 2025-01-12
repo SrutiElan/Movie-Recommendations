@@ -35,6 +35,8 @@ const SignUp: React.FC<Props> = ({ navigation }) => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        setError(true);
+        console.log("Error signing in:" + errorMessage); //add the specific codes later, like "auth/email-already-in-use"
       });
   };
   // useEffect(() => {

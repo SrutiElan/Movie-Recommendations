@@ -9,9 +9,9 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
+import {Movie} from "../types"
 import GlobalStyle from "../styles/styles";
 import { Ionicons } from "@expo/vector-icons";
-
 import "../../FirebaseConfig";
 import { getAuth } from "firebase/auth";
 
@@ -54,7 +54,7 @@ const Home: React.FC<Props> = ({ navigation }) => {
       });
   };
 
-  //Now that we got some data in our first collection, we can also load data when the app starts using useEffect.
+  //After getting some data in the first collection, load data when the app starts using useEffect.
   //Will load the data once & listen to changes on collection reference
   useEffect(() => {
     if (movieStatus === "idle") {
@@ -68,11 +68,14 @@ const Home: React.FC<Props> = ({ navigation }) => {
 
   const toggleExpand = (movieId: string) => {
     setExpandState((prevState) => ({
+      ...prevState,
       [movieId]: !prevState[movieId],
     }));
   };
 
   const renderMovie = ({ item }: any) => {
+    console.log("Rendering movie item:", item); // Debugging
+
     const handleSave = async (myThoughts: string) => {
       try {
         await dispatch(
@@ -83,7 +86,7 @@ const Home: React.FC<Props> = ({ navigation }) => {
         ).unwrap();
         alert("Saved!");
       } catch (error) {
-        console.error(`Error saving ${item.title}: `, error);
+        console.error(`Error saving ${item.movieData.title}: `, error);
       }
     };
     const handleDelete = () => {
@@ -92,7 +95,9 @@ const Home: React.FC<Props> = ({ navigation }) => {
     const isExpanded = expandState[item.ID];
 
     return (
+      
       <View style={styles.movieCollapsedBox}>
+
         <View
           style={{
             flexDirection: "row",
@@ -100,7 +105,7 @@ const Home: React.FC<Props> = ({ navigation }) => {
             width: `100%`,
           }}
         >
-          <Text style={GlobalStyle.details}>{item.title}</Text>
+          <Text style={GlobalStyle.details}>{item.movieData.title}</Text>
           <TouchableOpacity onPress={() => toggleExpand(item.ID)}>
             {isExpanded ? (
               <Ionicons name="chevron-up-outline" color="green" />
@@ -131,16 +136,17 @@ const Home: React.FC<Props> = ({ navigation }) => {
         >
           <Text style={GlobalStyle.buttonText}>Add New Movie</Text>
         </TouchableOpacity>
-
+        
         <View style={styles.moviesContainer}>
-          {movies.length > 0 && (
+          {  movies.length>0 ?  (
             <FlatList
               data={movies}
               renderItem={renderMovie}
-              keyExtractor={(movie) => movie.id}
+              keyExtractor={(movie) => movie.ID}
               // removeClippedSubviews={true}
             />
-          )}
+            
+          ): <Text style={[GlobalStyle.textInput, {alignSelf:"center"}]}>To start, add a movie!</Text>}
         </View>
         <TouchableOpacity
           style={[
