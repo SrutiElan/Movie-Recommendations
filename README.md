@@ -85,12 +85,17 @@ An intuitive React Native app for managing personalized movie recommendations. B
 ---
 
 ## 📸 Screenshots
-### Add New Movie Screen  
-![Add New Movie](https://via.placeholder.com/400x800)  
-
-### Home Screen  
-![Home Screen](https://via.placeholder.com/400x800)  
-
+<table>
+  <tr>
+    <td>Add New Movie Screen</td>
+     <td>Home Screen</td>
+  </tr>
+  <tr>
+    <td><img src="assets/AddNewMovieScreenshot" width="200" /></td>
+    <td><img src="assets/HomeScreen.png" width="200" /></td>
+  </tr>
+ </table>
+ 
 ---
 
 ## 📁 Project Structure
