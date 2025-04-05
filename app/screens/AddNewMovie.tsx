@@ -61,9 +61,9 @@ const AddNewMovie: React.FC<Props> = ({ navigation }) => {
     if (!movie) return;
 
     const movieWithThoughts = {
-      ...movie,
+      ...movie!,
       thoughts: myThoughts,
-      watched: false,
+      //watched: false,
     };
 
     dispatch(addMovie(movieWithThoughts));

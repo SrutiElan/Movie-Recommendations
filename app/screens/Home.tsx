@@ -74,7 +74,7 @@ const Home: React.FC<Props> = ({ navigation }) => {
   };
 
   const renderMovie = ({ item }: any) => {
-    console.log("Rendering movie item:", item); // Debugging
+    //console.log("Rendering movie item:", item); // Debugging
 
     const handleSave = async (myThoughts: string) => {
       try {
@@ -89,6 +89,7 @@ const Home: React.FC<Props> = ({ navigation }) => {
         console.error(`Error saving ${item.movieData.title}: `, error);
       }
     };
+
     const handleDelete = () => {
       dispatch(deleteMovie(item));
     };

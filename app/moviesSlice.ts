@@ -35,7 +35,7 @@ export const fetchMovies = createAsyncThunk("movies/fetchMovies", async () => {
     const querySnapshot = await getDocs(
       collection(FIRESTORE_DB, "users", user.uid, "movies")
     );
-    const movies = <any>[];
+    const movies: Movie[] = [];
     querySnapshot.forEach((doc) => {
       const data = doc.data();
       movies.push({
@@ -54,23 +54,28 @@ export const fetchMovies = createAsyncThunk("movies/fetchMovies", async () => {
 //thunk to add a new movie
 export const addMovie = createAsyncThunk(
   "movies/addMovie",
-  async (movieData: any) => {
+  async (movieData: Movie) => {
     const user = auth.currentUser;
     if (!user) throw new Error("No user is logged in");
 
       try {
+        const { thoughts, movieData: apiData } = movieData;
         const docRef = await addDoc(
           collection(FIRESTORE_DB, "users", user.uid, "movies"),
           {
-            //changed in the new user -> movie set up
-            movieData,
-            thoughts: "", // Initialize thoughts as empty
+            movieData: apiData,
+            thoughts: thoughts || "",
           }
-        );
+        );  
         console.log("Movie added successfully");
-        return { ID: docRef.id, thoughts: "", movieData };
+        return {
+          ID: docRef.id,
+          thoughts,
+          movieData: apiData,
+        };      
       } catch (error) {
         console.error("Error adding movie:", error);
+        throw error;
       }
     
   }
@@ -100,6 +105,7 @@ export const updateMovie = createAsyncThunk(
   async ({ movieId, newData }: { movieId: string; newData: string }) => {
     const user = auth.currentUser;
     if (!user) throw new Error("No user is logged in");
+
     try {
       const docRef = doc(FIRESTORE_DB, "users", user.uid, "movies", movieId);
       console.log(
@@ -108,15 +114,18 @@ export const updateMovie = createAsyncThunk(
 
       await updateDoc(docRef, { thoughts: newData });
 
-      // Return the updated movie data
+      // Fetch the updated document and return properly structured data
       const updatedDoc = await getDoc(docRef);
+      const updatedData = updatedDoc.data();
+
       return {
         ID: movieId,
         thoughts: newData,
-        ...updatedDoc.data()?.movieData, // Spread existing data
+        movieData: updatedData?.movieData, // ✅ properly nested
       };
     } catch (error) {
       console.error("Error updating movie:", error);
+      throw error;
     }
   }
 );
