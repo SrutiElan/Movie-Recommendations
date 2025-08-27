@@ -23,6 +23,8 @@ interface SearchResultMovie {
   overview: string;
   release_date: string;
   poster_path: string;
+  genre_ids: number[];
+  vote_average: number;
   // Add other fields as needed
 }
 
@@ -50,7 +52,10 @@ const AddNewMovie: React.FC<Props> = ({ navigation }) => {
     setMovie({
       ID: "", // Will be populated by Firebase
       thoughts: "", // Default empty thoughts
-      movieData: selectedMovie,
+      movieData: {
+        ...selectedMovie,
+        id: Number(selectedMovie.id), // Convert id to number
+      },
       // watched: false,
     });    
     setSearchResults([]); // Clear movie suggestions after selecting a movie
@@ -109,10 +114,12 @@ const AddNewMovie: React.FC<Props> = ({ navigation }) => {
           )}
           {movie && (
             <MovieDetails
-            movie={movie} // Pass the selected movie directly
-            onSave={addMovieWithRedux}
-              showDelete={false}
-            />
+              movie={movie} // Pass the selected movie directly
+              onSave={addMovieWithRedux}
+              showDelete={false} onDelete={function (): void {
+                throw new Error("Function not implemented.");
+              } } 
+               />
           )}
         </View>
       </View>
