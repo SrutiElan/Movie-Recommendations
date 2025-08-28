@@ -27,6 +27,7 @@ import moviesSlice, {
   updateMovie,
 } from "../moviesSlice";
 import { AppDispatch, RootState } from "../store";
+import { popularMovies } from "../../services/tmbd";
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, "Home">;
@@ -76,12 +77,13 @@ const Home: React.FC<Props> = ({ navigation }) => {
   const renderMovie = ({ item }: any) => {
     //console.log("Rendering movie item:", item); // Debugging
 
-    const handleSave = async (myThoughts: string) => {
+    const handleSave = async (myThoughts: string, rating? : 'thumbs_up' | 'thumbs_down' | null) => {
       try {
         await dispatch(
           updateMovie({
             movieId: item.ID,
             newData: myThoughts,
+            rating: rating,
           })
         ).unwrap();
         alert("Saved!");

@@ -102,17 +102,21 @@ export const deleteMovie = createAsyncThunk(
 
 export const updateMovie = createAsyncThunk(
   "movies/updateMovie",
-  async ({ movieId, newData }: { movieId: string; newData: string }) => {
+  async ({ movieId, newData, rating }: { movieId: string; newData: string; rating?: 'thumbs_up' | 'thumbs_down'| null }) => {
     const user = auth.currentUser;
     if (!user) throw new Error("No user is logged in");
 
     try {
       const docRef = doc(FIRESTORE_DB, "users", user.uid, "movies", movieId);
       console.log(
-        `Updating movie with ID: ${movieId} and new data: ${newData}`
+        `Updating movie with ID: ${movieId}, thoughts: ${newData}, rating: ${rating}`
       );
 
-      await updateDoc(docRef, { thoughts: newData });
+      const updateData: any = { thoughts: newData };
+      if (rating !== undefined) {
+        updateData.rating = rating;
+      }
+      await updateDoc(docRef, updateData);
 
       // Fetch the updated document and return properly structured data
       const updatedDoc = await getDoc(docRef);
@@ -121,7 +125,8 @@ export const updateMovie = createAsyncThunk(
       return {
         ID: movieId,
         thoughts: newData,
-        movieData: updatedData?.movieData, // ✅ properly nested
+        rating: rating,
+        movieData: updatedData?.movieData, 
       };
     } catch (error) {
       console.error("Error updating movie:", error);

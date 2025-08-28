@@ -45,3 +45,25 @@ const options = {
   }
 }
 export {fetchGenres}; 
+
+const popularMovies = async () => {
+
+const options = {
+  method: 'GET',
+  url: 'https://api.themoviedb.org/3/movie/popular',
+  params: {language: 'en-US', page: '1'},
+  headers: {
+    accept: 'application/json',
+    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5ZmFhMDJmMmU1MmMxZjkwYTQxYzI0ODQ4YzRlNjFlYiIsIm5iZiI6MTcyMzkyMzIzOC44OTQsInN1YiI6IjY2YzBmYjI2YTIyMTM5YThkOWMyMDg0YyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.kERaJIR3II-bQIWjXE_1XAk6wcT9j4ONimiTUbTRBm0'
+  }
+};
+
+  try {
+    const response = await axios.request(options);
+    return response.data.results;
+  } catch (error) {i
+    console.error("Error fetching genres from API", error);
+    return [];
+  }
+}
+export {popularMovies};

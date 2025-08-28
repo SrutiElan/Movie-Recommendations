@@ -25,3 +25,11 @@ export interface RecommendedMovie {
   similarity_score: number;
   reasons: string[]; // Why this was recommended
 }
+
+
+export interface UserPreferences {
+  favoriteGenres: string[];
+  averageRating: number;
+  preferredDecade: string;
+  totalMoviesRated: number;
+}

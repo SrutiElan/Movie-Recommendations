@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Movie} from "../types";
+import {Movie, RecommendedMovie} from "../types";
 import {
   StyleSheet,
   Text,
@@ -8,15 +8,21 @@ import {
   Image,
   Button,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import GlobalStyle from "../styles/styles";
 import { Ionicons, Entypo } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
+import MovieRecommendations from "./MovieRecommendations";
 
 interface MovieDetailsProps {
   movie:Movie;
-  onSave: (thoughts: string) => void;
+  onSave: (thoughts: string, rating?: 'thumbs_up' | 'thumbs_down' | null) => void;
   showDelete: boolean;
   onDelete?: () => void;
+    onAddToWatchlist?: (movie: RecommendedMovie) => void;
+
 }
 
 const MovieDetails: React.FC<MovieDetailsProps> = ({
@@ -24,8 +30,31 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
   onSave,
   onDelete,
   showDelete,
+  onAddToWatchlist,
 }) => {
   const [myThoughts, setThoughts] = useState(movie.thoughts);
+  const [rating, setRating] = useState<'thumbs_up' | 'thumbs_down' | null>(
+    movie.rating || null
+  );
+    // Get all user movies for recommendations
+  const allUserMovies = useSelector((state: RootState) => state.movies.movies);
+
+  const handleRating = (newRating: 'thumbs_up' | 'thumbs_down') => {
+    const updatedRating = rating === newRating ? null : newRating;
+    setRating(updatedRating);
+  };
+
+  const handleSave = () => {
+    onSave(myThoughts, rating);
+  }
+  
+    const handleAddToWatchlist = (recommendedMovie: RecommendedMovie) => {
+    if (onAddToWatchlist) {
+      onAddToWatchlist(recommendedMovie);
+    } else {
+      Alert.alert("Added to Watchlist", `${recommendedMovie.title} has been added to your watchlist!`);
+    }
+  };
 
   return (
     <View style={{ height: `auto`, width: `100%` }}>
@@ -69,6 +98,54 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
           </Text>
         </View>
       </View>
+
+      {/* NEW: Rating Section */}
+      <View style={styles.ratingSection}>
+        <Text style={GlobalStyle.labelText}>YOUR RATING</Text>
+        <View style={styles.ratingButtons}>
+          <TouchableOpacity
+            style={[
+              styles.ratingButton,
+              rating === 'thumbs_up' && styles.ratingButtonActive
+            ]}
+            onPress={() => handleRating('thumbs_up')}
+          >
+            <Ionicons 
+              name="thumbs-up" 
+              size={20} 
+              color={rating === 'thumbs_up' ? '#4CAF50' : '#ccc'} 
+            />
+            <Text style={[
+              styles.ratingText,
+              rating === 'thumbs_up' && styles.ratingTextActive
+            ]}>
+              Like
+            </Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity
+            style={[
+              styles.ratingButton,
+              rating === 'thumbs_down' && styles.ratingButtonActive
+            ]}
+            onPress={() => handleRating('thumbs_down')}
+          >
+            <Ionicons 
+              name="thumbs-down" 
+              size={20} 
+              color={rating === 'thumbs_down' ? '#f44336' : '#ccc'} 
+            />
+            <Text style={[
+              styles.ratingText,
+              rating === 'thumbs_down' && styles.ratingTextActive
+            ]}>
+              Dislike
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+
       <Text style={GlobalStyle.labelText}>MY THOUGHTS</Text>
       <View style={styles.thoughtsBox}>
         <TextInput
@@ -114,11 +191,19 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
         )}
         <TouchableOpacity
           style={[GlobalStyle.button, { flex: (showDelete && 0.75) || 1 }]}
-          onPress={() => [onSave(myThoughts)]}
+          onPress={handleSave}
         >
           <Text style={GlobalStyle.buttonText}>Save</Text>
         </TouchableOpacity>
       </View>
+
+      {/* NEW: Movie Recommendations Section */}
+      {showDelete && rating && (
+        <MovieRecommendations
+          userMovies={allUserMovies}
+          onAddToWatchlist={handleAddToWatchlist}
+        />
+      )}
     </View>
   );
 };
@@ -184,6 +269,37 @@ const styles = StyleSheet.create({
     fontWeight: 400,
     fontSize: 10,
     textAlignVertical: "top",
+  },
+  ratingSection: {
+    marginVertical: 15,
+  },
+  ratingButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10,
+  },
+  ratingButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    backgroundColor: '#f9f9f9',
+  },
+  ratingButtonActive: {
+    backgroundColor: '#e8f5e8',
+    borderColor: '#4CAF50',
+  },
+  ratingText: {
+    marginLeft: 6,
+    fontSize: 12,
+    color: '#666',
+  },
+  ratingTextActive: {
+    color: '#4CAF50',
+    fontWeight: '600',
   },
 });
 
