@@ -7,7 +7,7 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-import GlobalStyle from "../styles/styles";
+import GlobalStyle from "../styles/globals";
 
 import "../../FirebaseConfig";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";

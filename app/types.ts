@@ -19,6 +19,7 @@ export interface RecommendedMovie {
   id: number;
   title: string;
   overview: string;
+  release_date: string;
   poster_path: string;
   genre_ids: number[];
   vote_average: number;

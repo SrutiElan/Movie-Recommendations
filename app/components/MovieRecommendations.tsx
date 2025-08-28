@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Movie, RecommendedMovie } from '../types';
-import GlobalStyle from '../styles/styles';
+import GlobalStyle from '../styles/globals';
 import MovieRecommendationEngine from '../../services/recommendationEngine';
 
 interface MovieRecommendationsProps {
@@ -35,9 +35,9 @@ const MovieRecommendations: React.FC<MovieRecommendationsProps> = ({
   const generateRecommendations = async () => {
     setLoading(true);
     try {
-      const recs = await recommendationEngine.getRecommendations(userMovies);
+      const recs = recommendationEngine.getRecommendations(userMovies);
       // Fetch poster paths for recommendations
-      console.log("Generated recommendations:", recs);
+    //   console.log("Generated recommendations:", recs.forEach(r => console.log(r.title)));
       const recsWithPosters = await Promise.all(
         recs.map(async (rec) => {
           const posterPath = await fetchMoviePoster(rec.id);
@@ -161,7 +161,7 @@ const MovieRecommendations: React.FC<MovieRecommendationsProps> = ({
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>You may like these movies</Text>
       <Text style={styles.subtitle}>
-        Based on your preferences • Powered by AI
+        Based on your preferences
       </Text>
       
       <FlatList
@@ -180,6 +180,7 @@ const styles = StyleSheet.create({
   container: {
     marginTop: 20,
     paddingHorizontal: 10,
+    height: '50%',
   },
   sectionTitle: {
     fontSize: 18,
@@ -193,17 +194,17 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   listContainer: {
-    paddingHorizontal: 5,
+    gap: 5,
+    height: '100%',
   },
   recommendationCard: {
     width: 280,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffffff',
+    borderColor: '#ddd',
+    borderWidth: 1,
     borderRadius: 12,
     padding: 15,
     marginHorizontal: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
@@ -273,7 +274,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#007AFF',
+    backgroundColor: '#024023',
     paddingVertical: 10,
     borderRadius: 8,
   },

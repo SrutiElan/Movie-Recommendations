@@ -8,8 +8,8 @@ import {
   Text,
 } from "react-native";
 import MovieDetails from "../components/MovieDetails";
-import GlobalStyle from "../styles/styles";
-import {Movie} from "../types"
+import GlobalStyle from "../styles/globals";
+import { Movie } from "../types";
 
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../App";
@@ -57,23 +57,23 @@ const AddNewMovie: React.FC<Props> = ({ navigation }) => {
         id: Number(selectedMovie.id), // Convert id to number
       },
       // watched: false,
-    });    
+    });
     setSearchResults([]); // Clear movie suggestions after selecting a movie
     setQuery(selectedMovie.title); // Update the query to the selected movie's title
   };
 
-  const addMovieWithRedux = (myThoughts: any) => {
+  const addMovieWithRedux = (myThoughts: any, rating: any) => {
     if (!movie) return;
 
     const movieWithThoughts = {
       ...movie!,
       thoughts: myThoughts,
-      //watched: false,
+      rating: rating,
     };
 
     dispatch(addMovie(movieWithThoughts));
     setMovie(undefined);
-    alert("Movie saved with thoughts!");
+    alert("Movie saved with thoughts and rating!");
     navigation.goBack();
   };
 
@@ -96,12 +96,11 @@ const AddNewMovie: React.FC<Props> = ({ navigation }) => {
             onSubmitEditing={handleSearch}
           />
           {/* <Button title="Search" onPress={handleSearch} /> */}
-          {searchResults.length != 0 &&  (
+          {searchResults.length != 0 && (
             <FlatList
               style={styles.suggestionBox}
               data={searchResults}
-              keyExtractor={(item) => 
-                item.id.toString()}
+              keyExtractor={(item) => item.id.toString()}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.suggestion}
@@ -116,10 +115,11 @@ const AddNewMovie: React.FC<Props> = ({ navigation }) => {
             <MovieDetails
               movie={movie} // Pass the selected movie directly
               onSave={addMovieWithRedux}
-              showDelete={false} onDelete={function (): void {
+              showDelete={false}
+              onDelete={function (): void {
                 throw new Error("Function not implemented.");
-              } } 
-               />
+              }}
+            />
           )}
         </View>
       </View>

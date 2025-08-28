@@ -1,5 +1,13 @@
 import { StyleSheet } from "react-native";
 
+// Shared constants
+export const COLORS = {
+  primary: "#024023",
+  background: "#FFFFFF",
+  accent: "#F5F5F5",
+  border: "#C6C6C8",
+};
+
 export default StyleSheet.create({
   scrollViewContent: {
     flex: 1,

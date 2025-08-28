@@ -4,6 +4,7 @@ interface MovieFeatures {
   id: number;
   title: string;
   overview: string;
+  release_date: string;
   genres: string[];
   year: number;
   rating: number;
@@ -27,7 +28,6 @@ constructor() {
 
 private async initializeMovieDatabase() {
     const movies = await popularMovies();
-    //console.log("Fetched popular movies for recommendation engine:", movies);
     this.movieDatabase = movies.map((movie: any) => this.processMovieFeatures(movie));
 }
 
@@ -50,6 +50,7 @@ private processMovieFeatures(movie: any): MovieFeatures {
         id: movie.id,
         title: movie.title,
         overview: movie.overview,
+        release_date: movie.release_date,
         genres,
         year,
         rating: movie.vote_average,
@@ -103,7 +104,10 @@ private processMovieFeatures(movie: any): MovieFeatures {
 
   public getRecommendations(userMovies: Movie[], topN: number = 5): RecommendedMovie[] {
     const likedMovies = userMovies.filter(m => m.rating === 'thumbs_up');
+    console.log("Liked movies for recommendations:", likedMovies);
+
     if (likedMovies.length === 0) {
+        console.log("No liked movies found, returning popular recommendations.");
         return this.getPopularRecommendations();
     }
     // create user profile by averaging liked movie features
@@ -123,13 +127,14 @@ private processMovieFeatures(movie: any): MovieFeatures {
             id: rec.id,
             title: rec.title,
             overview: rec.overview,
+            release_date: rec.release_date,
             poster_path: '', //(popularMovies().results.find((m: any) => m.id === rec.id) || {}).poster_path || '', //implement this later
             genre_ids: Object.keys(this.genreMap).filter(key => rec.genres.includes(this.genreMap[parseInt(key)])).map(Number),
             vote_average: rec.rating,
             similarity_score: rec.similarity_score,
             reasons: rec.reasons
         }));
-    return [];
+    return recommendations;
   }
 
   private createUserProfile(likedMovies: Movie[]): MovieFeatures {
@@ -152,6 +157,7 @@ private processMovieFeatures(movie: any): MovieFeatures {
         id: 0,
         title: 'User Profile',
         overview: '',
+        release_date: '',
         genres: commonGenres,
         year: 0, // new Date().getFullYear(),
         rating: 0,
@@ -210,6 +216,7 @@ private processMovieFeatures(movie: any): MovieFeatures {
         id: movie.id,
         title: movie.title,
         overview: movie.overview,
+        release_date: movie.release_date,
         poster_path: '', // Will be fetched separately
         genre_ids: Object.keys(this.genreMap).filter(key => 
           movie.genres.includes(this.genreMap[parseInt(key)])

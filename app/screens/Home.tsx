@@ -8,9 +8,10 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
-import {Movie} from "../types"
-import GlobalStyle from "../styles/styles";
+import { Movie, RecommendedMovie } from "../types";
+import GlobalStyle from "../styles/globals";
 import { Ionicons } from "@expo/vector-icons";
 import "../../FirebaseConfig";
 import { getAuth } from "firebase/auth";
@@ -25,9 +26,11 @@ import moviesSlice, {
   fetchMovies,
   deleteMovie,
   updateMovie,
+  addMovie,
 } from "../moviesSlice";
 import { AppDispatch, RootState } from "../store";
 import { popularMovies } from "../../services/tmbd";
+import MovieRecommendations from "../components/MovieRecommendations";
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, "Home">;
@@ -74,10 +77,30 @@ const Home: React.FC<Props> = ({ navigation }) => {
     }));
   };
 
+  const handleAddToWatchlist = (recommendedMovie: RecommendedMovie) => {
+    // Convert RecommendedMovie to Movie type (without ID, Firestore will handle it)
+    const movieToAdd: Movie = {
+      ID: "", // Temporary ID, Firestore will assign a real one
+      movieData: {
+        ...recommendedMovie,
+      },
+      thoughts: "",
+      rating: null,
+    };
+
+    dispatch(addMovie(movieToAdd));
+    Alert.alert(
+      "Added to Watchlist",
+      `${recommendedMovie.title} has been added to your watchlist!`
+    );
+  };
   const renderMovie = ({ item }: any) => {
     //console.log("Rendering movie item:", item); // Debugging
 
-    const handleSave = async (myThoughts: string, rating? : 'thumbs_up' | 'thumbs_down' | null) => {
+    const handleSave = async (
+      myThoughts: string,
+      rating?: "thumbs_up" | "thumbs_down" | null
+    ) => {
       try {
         await dispatch(
           updateMovie({
@@ -98,9 +121,7 @@ const Home: React.FC<Props> = ({ navigation }) => {
     const isExpanded = expandState[item.ID];
 
     return (
-      
       <View style={styles.movieCollapsedBox}>
-
         <View
           style={{
             flexDirection: "row",
@@ -139,18 +160,27 @@ const Home: React.FC<Props> = ({ navigation }) => {
         >
           <Text style={GlobalStyle.buttonText}>Add New Movie</Text>
         </TouchableOpacity>
-        
+
         <View style={styles.moviesContainer}>
-          {  movies.length>0 ?  (
+          {movies.length > 0 ? (
             <FlatList
               data={movies}
               renderItem={renderMovie}
               keyExtractor={(movie) => movie.ID}
               // removeClippedSubviews={true}
             />
-            
-          ): <Text style={[GlobalStyle.textInput, {alignSelf:"center"}]}>To start, add a movie!</Text>}
+          ) : (
+            <Text style={[GlobalStyle.textInput, { alignSelf: "center" }]}>
+              To start, add a movie!
+            </Text>
+          )}
         </View>
+        {/* NEW: Movie Recommendations Section */}
+        <MovieRecommendations
+          userMovies={movies}
+          onAddToWatchlist={handleAddToWatchlist}
+        />
+
         <TouchableOpacity
           style={[
             GlobalStyle.buttonOutline,
@@ -191,7 +221,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     backgroundColor: "#F6F4F4",
     borderRadius: 8,
-    height: `80%`,
+    height: `30%`,
     width: `100%`,
   },
   movieCollapsedBox: {

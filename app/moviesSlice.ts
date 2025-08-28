@@ -42,6 +42,8 @@ export const fetchMovies = createAsyncThunk("movies/fetchMovies", async () => {
         ID: doc.id,
         thoughts: data.thoughts || "", // Default to empty string if undefined
         movieData: data.movieData, // Store the API-provided details here
+        rating: data.rating ?? null, // <-- Add this line
+
       });
     });
     return movies;
@@ -59,19 +61,21 @@ export const addMovie = createAsyncThunk(
     if (!user) throw new Error("No user is logged in");
 
       try {
-        const { thoughts, movieData: apiData } = movieData;
+        const { thoughts, movieData: apiData, rating } = movieData;
         const docRef = await addDoc(
           collection(FIRESTORE_DB, "users", user.uid, "movies"),
           {
             movieData: apiData,
-            thoughts: thoughts || "",
+          thoughts: thoughts || "",
+            rating: rating ?? null, 
           }
         );  
         console.log("Movie added successfully");
         return {
           ID: docRef.id,
-          thoughts,
-          movieData: apiData,
+        thoughts,
+        movieData: apiData,
+        rating: rating ?? null,
         };      
       } catch (error) {
         console.error("Error adding movie:", error);

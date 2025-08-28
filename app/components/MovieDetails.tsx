@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import GlobalStyle from "../styles/styles";
+import GlobalStyle from "../styles/globals";
 import { Ionicons, Entypo } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
@@ -33,12 +33,7 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
   onAddToWatchlist,
 }) => {
   const [myThoughts, setThoughts] = useState(movie.thoughts);
-  const [rating, setRating] = useState<'thumbs_up' | 'thumbs_down' | null>(
-    movie.rating || null
-  );
-    // Get all user movies for recommendations
-  const allUserMovies = useSelector((state: RootState) => state.movies.movies);
-
+  const [rating, setRating] = useState(movie.rating);
   const handleRating = (newRating: 'thumbs_up' | 'thumbs_down') => {
     const updatedRating = rating === newRating ? null : newRating;
     setRating(updatedRating);
@@ -197,13 +192,6 @@ const MovieDetails: React.FC<MovieDetailsProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* NEW: Movie Recommendations Section */}
-      {showDelete && rating && (
-        <MovieRecommendations
-          userMovies={allUserMovies}
-          onAddToWatchlist={handleAddToWatchlist}
-        />
-      )}
     </View>
   );
 };
