@@ -98,7 +98,7 @@ An intuitive React Native app for managing personalized movie recommendations. B
      <td>Home Screen</td>
   </tr>
   <tr>
-    <td><img src="assets/AddNewMovieScreenshot" width="200" /></td>
+    <td><img src="assets/AddNewMovieScreen" width="200" /></td>
     <td><img src="assets/HomeScreen.png" width="200" /></td>
   </tr>
  </table>
