@@ -1,6 +1,6 @@
 # 🎥 Movie Recommendations App
 
-An intuitive React Native app for managing personalized movie recommendations. Built with Firebase, Redux, and TypeScript, this app allows users to add, update, and delete movies from their collection, save thoughts, and explore new recommendations.
+An intuitive React Native app for managing personalized movie recommendations. Built with Firebase, Redux, and TypeScript, this app allows users to add, update, and delete movies from their collection, save thoughts, rate titles with quick thumbs up/down reactions, and explore tailored recommendations with reasons and match scores.
 
 ---
 
@@ -19,8 +19,10 @@ An intuitive React Native app for managing personalized movie recommendations. B
 ## 🚀 Features
 - User authentication (sign up, log in, log out) using Firebase.
 - Add movies to a personalized collection with data fetched from The Movie Database (TMDb) API.
-- Save personal thoughts and ratings for each movie.
-- Update or delete movies from the collection.
+- Save personal thoughts and lightweight thumbs up/down ratings for each movie.
+- Update or delete movies in your collection, and dismiss recommendations that do not fit.
+- Personalized recommendations based on liked movies, with match scores and short “why we recommend this” explanations.
+- One-tap add from the recommendations rail straight into your watchlist.
 - Redux-powered state management for efficient performance.
 - Dynamic UI animations for a smooth user experience.
 
@@ -42,8 +44,8 @@ An intuitive React Native app for managing personalized movie recommendations. B
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/movie-recommendations-app.git
-   cd movie-recommendations-app
+   git clone https://github.com/your-username/MovieApp.git
+   cd MovieApp
    ```
 
 2. **Install Dependencies**:
@@ -58,7 +60,7 @@ An intuitive React Native app for managing personalized movie recommendations. B
 
 4. **Add TMDb API Key**:
    - Create an account at [TMDb](https://www.themoviedb.org/).
-   - Get your API key and replace the placeholder in `services/tmdb.js`.
+   - Get your API key and replace the placeholder in `services/tmbd.js`.
 
 5. **Start the Development Server**:
    ```bash
@@ -77,6 +79,11 @@ An intuitive React Native app for managing personalized movie recommendations. B
 ### Viewing and Managing Movies:
 1. View your collection on the **Home** screen.
 2. Expand any movie to update your thoughts or delete it from the collection.
+
+### Getting Recommendations:
+1. Open a saved movie and tap **Like** or **Dislike** to give the engine a signal.
+2. Visit the **Recommendations** rail on Home to see personalized picks with match percentages and reasons.
+3. Tap **Add to Watchlist** on any recommendation to save it, or dismiss items you do not want to see again.
 
 ### Authentication:
 - Log in to access your personalized collection.
@@ -100,24 +107,22 @@ An intuitive React Native app for managing personalized movie recommendations. B
 
 ## 📁 Project Structure
 ```
-movie-recommendations-app/
-├── components/         # Reusable React components
-│   ├── MovieDetails.tsx
-├── services/           # API services (TMDb)
-│   └── tmdb.js
-├── redux/              # Redux slices and store
-│   ├── moviesSlice.ts
-│   ├── store.ts
-├── screens/            # Screen components
-│   ├── Home.tsx
-│   ├── AddNewMovie.tsx
-│   ├── LogIn.tsx
-│   ├── SignUp.tsx
-├── styles/             # Global and component-specific styles
-│   └── styles.ts
-├── FirebaseConfig.ts   # Firebase setup and config
-├── App.tsx             # Main app entry
-└── package.json        # Project metadata and dependencies
+MovieApp/
+├── App.tsx                  # Navigation entry and providers
+├── app/
+│   ├── components/          # Reusable UI (MovieDetails, MovieRecommendations, animations, search)
+│   ├── screens/             # Home, AddNewMovie, LogIn, SignUp, Greeting
+│   ├── moviesSlice.ts       # Redux slice for movies
+│   ├── store.ts             # Redux store setup
+│   ├── styles/              # Global styles
+│   └── types.ts             # Shared TypeScript types
+├── services/                # External data + recommendation logic
+│   ├── tmbd.js              # TMDb search/genre/popular fetchers
+│   └── recommendationEngine.ts # Local recommendation engine using TMDb signals
+├── assets/                  # Images and demo media
+├── FirebaseConfig.ts        # Firebase setup and config
+├── package.json             # Project metadata and dependencies
+└── README.md
 ```
 
 ---
