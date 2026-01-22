@@ -1,10 +1,10 @@
-# 🎥 Movie Recommendations App
+# Movie Recommendations App
 
 An intuitive React Native app for managing personalized movie recommendations. Built with Firebase, Redux, and TypeScript, this app allows users to add, update, and delete movies from their collection, save thoughts, rate titles with quick thumbs up/down reactions, and explore tailored recommendations with reasons and match scores.
 
 ---
 
-## 📖 Table of Contents
+## Table of Contents
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Setup and Installation](#setup-and-installation)
@@ -16,7 +16,7 @@ An intuitive React Native app for managing personalized movie recommendations. B
 
 ---
 
-## 🚀 Features
+## Features
 - User authentication (sign up, log in, log out) using Firebase.
 - Add movies to a personalized collection with data fetched from The Movie Database (TMDb) API.
 - Save personal thoughts and lightweight thumbs up/down ratings for each movie.
@@ -28,7 +28,7 @@ An intuitive React Native app for managing personalized movie recommendations. B
 
 ---
 
-## 🛠 Technologies Used
+## Technologies Used
 - **React Native**: Cross-platform app development.
 - **TypeScript**: For type-safe code and better developer experience.
 - **Redux Toolkit**: State management for seamless data flow.
@@ -40,7 +40,7 @@ An intuitive React Native app for managing personalized movie recommendations. B
 
 ---
 
-## 🖥 Setup and Installation
+## Setup and Installation
 
 1. **Clone the Repository**:
    ```bash
@@ -69,7 +69,7 @@ An intuitive React Native app for managing personalized movie recommendations. B
 
 ---
 
-## 📲 Usage
+## Usage
 
 ### Adding a Movie:
 1. Search for a movie using the **Add New Movie** screen.
@@ -91,7 +91,7 @@ An intuitive React Native app for managing personalized movie recommendations. B
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 <table>
   <tr>
     <td>Add New Movie Screen</td>
@@ -105,7 +105,7 @@ An intuitive React Native app for managing personalized movie recommendations. B
  
 ---
 
-## 📁 Project Structure
+## Project Structure
 ```
 MovieApp/
 ├── App.tsx                  # Navigation entry and providers
@@ -125,27 +125,4 @@ MovieApp/
 └── README.md
 ```
 
----
 
-## 🤝 Contributing
-Contributions are welcome! Here's how you can contribute:
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature/your-feature`).
-3. Commit your changes (`git commit -m 'Add some feature'`).
-4. Push to the branch (`git push origin feature/your-feature`).
-5. Open a pull request.
-
----
-
-## 📝 License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-## ✨ Acknowledgements
-- Thanks to [TMDb](https://www.themoviedb.org/) for the API.
-- Special thanks to Firebase for making authentication and database management easy.
-
----
-
-Feel free to customize this further to include personal notes, links, or additional sections!
